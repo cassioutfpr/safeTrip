@@ -10,7 +10,7 @@ import 'primeicons/primeicons.css'
 Vue.use(PrimeVue);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyD0lEJcF8r5LqpOQMYrE7FXNRwnTB8sciE',
+    key: '',
     libraries: 'places',
   },
 })
