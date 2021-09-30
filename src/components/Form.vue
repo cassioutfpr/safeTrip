@@ -65,16 +65,17 @@ export default {
 			this.address = addressData;
 			this.origin = {
 				lat: placeResultData.geometry.location.lat(),
-				lng: placeResultData.geometry.location.lng()
+				lng: placeResultData.geometry.location.lng(),
+				id: id
 			}
-			console.log(placeResultData.geometry.location.lat(), id)
 		},
 		getAddressData2: function (addressData, placeResultData, id) {
 			this.destiny = {
 				lat: placeResultData.geometry.location.lat(),
-				lng: placeResultData.geometry.location.lng()
+				lng: placeResultData.geometry.location.lng(),
+				id: id
 			}
-			console.log(addressData, placeResultData, id)
+			//console.log(addressData, placeResultData, id)
 		},
 		handleClick() {
 			//console.log(this.origin,this.destiny,this.date);

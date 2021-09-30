@@ -16,6 +16,14 @@ import Chart from 'primevue/chart';
 
 export default {
 	name: 'RouteCharts',
+	props: {
+		chart_one_data: Array,
+		chart_two_data: Array,
+	},
+	mounted() {
+		this.basicData.datasets[0].data = this.chart_one_data;
+		this.basicData2.datasets[0].data = this.chart_two_data;
+	},
 	data: function() {
 		return {
 			basicData: {

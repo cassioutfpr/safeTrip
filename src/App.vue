@@ -6,10 +6,11 @@
           <img src="../public/icon.png" alt="Girl in a jacket" width="300" height="100"> 
         </div>
         <Form v-if="!isShowingRoute" @handleSearchRoute='handleSearchRoute' style='margin-top:20px'/>
-        <RouteCharts v-if="isShowingRoute" @handleBackToForm='handleBackToForm'/>
+        <RouteCharts v-if="isShowingRoute" :chart_one_data='chartOneData' :chart_two_data='chartTwoData'
+          @handleBackToForm='handleBackToForm'/>
       </div>
       <div class="p-col-8">
-        <SafeTrip :markers='markers'/>
+        <SafeTrip :markers='markers' :path='path'/>
       </div>
     </div>
   </div>
@@ -20,6 +21,8 @@ import SafeTrip from './components/SafeTrip.vue'
 import Form from './components/Form.vue'
 import RouteCharts from './components/RouteCharts.vue'
 import 'primeflex/primeflex.css';
+import axios from 'axios'
+
 
 export default {
   name: 'App',
@@ -34,7 +37,10 @@ export default {
       destiny: {},
       date: null,
       markers: [],
-      isShowingRoute: false
+      isShowingRoute: false,
+      path: [],
+      chartOneData: [],
+      chartTwoData: []
     }
   },
   methods: {
@@ -51,13 +57,35 @@ export default {
       this.markers.push(position);
       this.date = val.date;
 
-      this.isShowingRoute = true;
-      console.log(val.origin, val.destiny,val.date);
+      this.postRoute();
     },
     handleBackToForm() {
       this.isShowingRoute = false;
-    }
-  }
+    },
+    postRoute() {
+      let postObject = {
+        initLat: this.origin.lat,
+        initLng: this.origin.lng,
+        destLat: this.destiny.lat,
+        destLng: this.destiny.lng,
+        destiny: this.destiny,
+        date: this.date.valueOf()
+      }
+      console.log(postObject)
+      axios
+        .post('http://localhost:8081/route', postObject)
+          .then(data => {
+            console.log(data)
+            //this.path = data.data.path
+            //this.chartOneData = data.data.chart_one
+            //this.chartOneData = data.data.chart_two
+            this.isShowingRoute = true;
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
+    },
 }
 </script>
 

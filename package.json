@@ -9,6 +9,7 @@
     "deploy": "sh deploy.sh"
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
     "primeflex": "^2.0.0",
