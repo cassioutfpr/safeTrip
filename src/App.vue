@@ -61,7 +61,13 @@ export default {
       this.postRoute();
     },
     handleBackToForm() {
+      this.clearData();
       this.isShowingRoute = false;
+    },
+    clearData() {
+        this.pathFastest = [];
+        this.pathSafest = [];
+        this.markers = [];
     },
     postRoute() {
       let postObject = {

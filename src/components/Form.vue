@@ -34,7 +34,7 @@
 				Buscar Rota Segura <span class='pi pi-search'></span>
 			</div>
 			<div v-else style="display:flex; align-items: center;justify-content: center">
-				Carregando Rota   <three-dots :color="'#FFFFFF'" :size="'30px'" style="margin-left: 15px"/>
+				Calculando Rota   <three-dots :color="'#FFFFFF'" :size="'30px'" style="margin-left: 15px"/>
 			</div>
 		</Button>
 		</div>
