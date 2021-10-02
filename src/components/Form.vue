@@ -28,9 +28,18 @@
 
 		<div style="margin-top: 10vh">
 		<Button icon="pi pi-search" label="Buscar Rota Segura" class="p-button-rounded" 
-		@click="handleClick" loading="true"/>
+			style="min-height: 50px"
+		@click="handleClick">
+			<div v-if="!loading">
+				Buscar Rota Segura <span class='pi pi-search'></span>
+			</div>
+			<div v-else style="display:flex; align-items: center;justify-content: center">
+				Carregando Rota   <three-dots :color="'#FFFFFF'" :size="'30px'" style="margin-left: 15px"/>
+			</div>
+		</Button>
 		</div>
 
+		<Toast/>
 	</div>
 </template>
 
@@ -39,6 +48,8 @@
 import Calendar from 'primevue/calendar';
 import VueGoogleAutocomplete from 'vue-google-autocomplete'
 import Button from 'primevue/button';
+import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
+import Toast from 'primevue/toast';
 
 export default {
 	name: 'Form',
@@ -50,12 +61,15 @@ export default {
 			address: '',
 			origin: {},
 			destiny: {},
+			loading: false
 		}
 	},
 	components: {
 		Calendar,
 		VueGoogleAutocomplete,
-		Button
+		Button,
+		ThreeDots,
+		Toast
 	},
 	methods: {
 		searchCountry(event) {
@@ -78,8 +92,9 @@ export default {
 			//console.log(addressData, placeResultData, id)
 		},
 		handleClick() {
-			//console.log(this.origin,this.destiny,this.date);
-			console.log('OPA TAMO AI CLOCOU')
+			this.$toast.add({severity:'success', summary: 'Aguarde', detail:'A rota mais segura para você viajar está sendo calculada',
+				life: 3000});
+			this.loading = true;
 			this.$emit('handleSearchRoute',
 				{
 					origin:this.origin,

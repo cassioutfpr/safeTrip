@@ -7,7 +7,9 @@ import axios from 'axios'
 import 'primevue/resources/primevue.min.css';
 import 'primevue/resources/themes/saga-blue/theme.css'
 import 'primeicons/primeicons.css'
+import ToastService from 'primevue/toastservice';
 
+Vue.use(ToastService);
 Vue.use(PrimeVue);
 Vue.use(VueGoogleMaps, {
   load: {

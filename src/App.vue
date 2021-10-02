@@ -10,7 +10,7 @@
           @handleBackToForm='handleBackToForm'/>
       </div>
       <div class="p-col-8">
-        <SafeTrip :markers='markers' :path='path'/>
+        <SafeTrip :markers='markers' :pathFastest='pathFastest' :pathSafest='pathSafest' />
       </div>
     </div>
   </div>
@@ -38,9 +38,10 @@ export default {
       date: null,
       markers: [],
       isShowingRoute: false,
-      path: [],
+      pathFastest: [],
       chartOneData: [],
-      chartTwoData: []
+      chartTwoData: [],
+      pathSafest: []
     }
   },
   methods: {
@@ -74,8 +75,10 @@ export default {
       console.log(postObject)
       axios
         .post('http://localhost:8081/route', postObject)
-          .then(data => {
-            console.log(data)
+          .then(response => {
+            let paths = response.data.split("|");
+            this.pathFastest = this.processResponse(paths[0])
+            this.pathSafest = this.processResponse(paths[1])
             //this.path = data.data.path
             //this.chartOneData = data.data.chart_one
             //this.chartOneData = data.data.chart_two
@@ -84,6 +87,22 @@ export default {
           .catch(error => {
             console.log(error)
           })
+      },
+      processResponse(response) {
+        let pathTemp = [];
+        let coordinates = response.split(";");
+        console.log(coordinates);
+        coordinates.forEach(latLng => {
+            if (latLng === "") {
+              return;
+            }
+            let latLngSplited = latLng.split(",");
+            pathTemp.push({
+              lat: parseFloat(latLngSplited[0]),
+              lng: parseFloat(latLngSplited[1]),
+            }) 
+        })
+        return pathTemp;
       }
     },
 }
