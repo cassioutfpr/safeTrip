@@ -9,6 +9,7 @@
 		v-on:placechanged="getAddressData"
 		country="br"
 		style="width: 60%;height: 4vh"
+		types="(cities)"
 		>
 		</vue-google-autocomplete>
 		<h6 style="margin-bottom: 5px">Destino</h6>
@@ -20,6 +21,7 @@
 		v-on:placechanged="getAddressData2"
 		country="br"
 		style="width: 60%;height: 4vh"
+		types="(cities)"
 		>
 		</vue-google-autocomplete>
 
