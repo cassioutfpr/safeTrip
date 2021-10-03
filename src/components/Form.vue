@@ -55,6 +55,9 @@ import Toast from 'primevue/toast';
 
 export default {
 	name: 'Form',
+	props: {
+		loading: Boolean,
+	},
 	data: function() {
 		return {
 			selectedCountry: null,
@@ -62,8 +65,7 @@ export default {
 			date: null,
 			address: '',
 			origin: {},
-			destiny: {},
-			loading: false
+			destiny: {}
 		}
 	},
 	components: {
