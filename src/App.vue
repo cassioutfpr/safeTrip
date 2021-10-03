@@ -80,7 +80,7 @@ export default {
       }
       console.log(postObject)
       axios
-        .post('http://localhost:8081/route', postObject)
+        .post('https://safetrip-api.herokuapp.com/route', postObject)
           .then(response => {
             let paths = response.data.split("|");
             this.pathFastest = this.processResponse(paths[0])
