@@ -70,6 +70,7 @@ export default {
         this.pathFastest = [];
         this.pathSafest = [];
         this.markers = [];
+        this.loading = false;
     },
     postRoute() {
       let postObject = {
@@ -82,7 +83,7 @@ export default {
       }
       this.loading = true;
       axios
-        .post('http://18.231.151.249:8080/route', postObject)
+        .post('http://54.94.32.64:8080/route', postObject)
           .then(response => {
             let paths = response.data.split("|");
             this.pathFastest = this.processResponse(paths[0])
