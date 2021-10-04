@@ -1,29 +1,13 @@
 <template>
 	<div>
 		<h6 style="margin-bottom: 5px">Origem</h6>
-		<vue-google-autocomplete
-		ref="address"
-		id="map"
-		classname="form-control"
-		placeholder=""
-		v-on:placechanged="getAddressData"
-		country="br"
-		style="width: 60%;height: 4vh"
-		types="(cities)"
-		>
-		</vue-google-autocomplete>
+        <GmapAutocomplete style="width: 60%;height: 4vh"
+       @place_changed="setPlace1">
+        </GmapAutocomplete>
 		<h6 style="margin-bottom: 5px">Destino</h6>
-		<vue-google-autocomplete
-		ref="address"
-		id="map2"
-		classname="form-control"
-		placeholder=""
-		v-on:placechanged="getAddressData2"
-		country="br"
-		style="width: 60%;height: 4vh"
-		types="(cities)"
-		>
-		</vue-google-autocomplete>
+        <GmapAutocomplete style="width: 60%;height: 4vh"
+       @place_changed="setPlace2">
+        </GmapAutocomplete>
 
 		<h6 style="margin-bottom: 5px">Dia/horário</h6>
 		<Calendar id="time24" v-model="date" :showTime="true" :showSeconds="true" />
@@ -48,10 +32,10 @@
 
 <script>
 import Calendar from 'primevue/calendar';
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
 import Button from 'primevue/button';
 import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
 import Toast from 'primevue/toast';
+import {gmapApi} from 'vue2-google-maps'
 
 export default {
 	name: 'Form',
@@ -70,14 +54,29 @@ export default {
 	},
 	components: {
 		Calendar,
-		VueGoogleAutocomplete,
 		Button,
 		ThreeDots,
 		Toast
 	},
+	computed: {
+		google: gmapApi
+	},
 	methods: {
 		searchCountry(event) {
             this.filteredCountriesBasic = event.query;
+		},
+		setPlace1(val) {
+			console.log(val.geometry.location.lat());
+			this.origin = {
+				lat: val.geometry.location.lat(),
+				lng: val.geometry.location.lng()
+			}
+		},
+		setPlace2(val) {
+			this.destiny = {
+				lat: val.geometry.location.lat(),
+				lng: val.geometry.location.lng()
+			}
 		},
 		getAddressData: function (addressData, placeResultData, id) {
 			this.address = addressData;
@@ -98,7 +97,6 @@ export default {
 		handleClick() {
 			this.$toast.add({severity:'success', summary: 'Aguarde', detail:'A rota mais segura para você viajar está sendo calculada',
 				life: 3000});
-			this.loading = true;
 			this.$emit('handleSearchRoute',
 				{
 					origin:this.origin,

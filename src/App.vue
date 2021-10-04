@@ -73,6 +73,7 @@ export default {
         this.loading = false;
     },
     postRoute() {
+      console.log('ooooba')
       let postObject = {
         initLat: this.origin.lat,
         initLng: this.origin.lng,
@@ -82,8 +83,9 @@ export default {
         date: this.date.valueOf()
       }
       this.loading = true;
+      console.log(postObject)
       axios
-        .post('http://54.94.32.64:8080/route', postObject)
+        .post('http://15.228.48.50:8080/route', postObject)
           .then(response => {
             let paths = response.data.split("|");
             this.pathFastest = this.processResponse(paths[0])
