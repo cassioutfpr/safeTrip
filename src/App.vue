@@ -5,7 +5,8 @@
         <div id="title" style="margin-bottom: 0px">
           <img src="../public/icon.png" alt="Girl in a jacket" width="300" height="100"> 
         </div>
-        <Form v-if="!isShowingRoute" @handleSearchRoute='handleSearchRoute' style='margin-top:20px'/>
+        <Form v-if="!isShowingRoute" @handleSearchRoute='handleSearchRoute' style='margin-top:20px'
+          :loading="loading"/>
         <RouteCharts v-if="isShowingRoute" :chart_one_data='chartOneData' :chart_two_data='chartTwoData'
           @handleBackToForm='handleBackToForm'/>
       </div>
@@ -41,7 +42,8 @@ export default {
       pathFastest: [],
       chartOneData: [],
       chartTwoData: [],
-      pathSafest: []
+      pathSafest: [],
+      loading: false,
     }
   },
   methods: {
@@ -78,9 +80,9 @@ export default {
         destiny: this.destiny,
         date: this.date.valueOf()
       }
-      console.log(postObject)
+      this.loading = true;
       axios
-        .post('https://safetrip-api.herokuapp.com/route', postObject)
+        .post('http://18.231.151.249:8080/route', postObject)
           .then(response => {
             let paths = response.data.split("|");
             this.pathFastest = this.processResponse(paths[0])
@@ -89,9 +91,11 @@ export default {
             //this.chartOneData = data.data.chart_one
             //this.chartOneData = data.data.chart_two
             this.isShowingRoute = true;
+            this.loading = true;
           })
           .catch(error => {
             console.log(error)
+            this.loading = false;
           })
       },
       processResponse(response) {
