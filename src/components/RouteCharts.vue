@@ -34,9 +34,13 @@ export default {
 	name: 'RouteCharts',
 	props: {
 		chart_one_data: Array,
+		chart_one_bck: Array,
 		chart_two_data: Array,
+		chart_two_bck: Array,
 		chart_three_data: Array,
+		chart_three_bck: Array,
 		chart_four_data: Array,
+		chart_four_bck: Array,
 		distance_fastest: Number,
 		time_fastest: Number,
 		distance_safest: Number,
@@ -44,8 +48,10 @@ export default {
 	},
 	mounted() {
 		this.basicData.datasets[0].data = this.chart_one_data;
+		this.basicData.datasets[0].backgroundColor = this.chart_one_bck;
 		this.$refs.chartOne.refresh();
 		this.basicData2.datasets[0].data = this.chart_two_data;
+		this.basicData2.datasets[0].backgroundColor = this.chart_two_bck;
 		this.$refs.chartTwo.refresh();
 	},
 	data: function() {
@@ -106,16 +112,20 @@ export default {
 		async handleClickFastest() {
 			this.fastestRouteSelected = true;
 			this.basicData.datasets[0].data = this.chart_one_data;
+			this.basicData.datasets[0].backgroundColor = this.chart_one_bck;
 			this.$refs.chartOne.refresh();				
 			this.basicData2.datasets[0].data = this.chart_two_data;
+			this.basicData2.datasets[0].backgroundColor = this.chart_two_bck;
 			this.$refs.chartTwo.refresh();
 		},
 		async handleClickSafest() {
 			this.fastestRouteSelected = false;
 
 			this.basicData.datasets[0].data = this.chart_three_data;
+			this.basicData.datasets[0].backgroundColor = this.chart_three_bck;
 			this.$refs.chartOne.refresh();
 			this.basicData2.datasets[0].data = this.chart_four_data;
+			this.basicData2.datasets[0].backgroundColor = this.chart_four_bck;
 
 			this.$refs.chartTwo.refresh();
 
@@ -137,9 +147,31 @@ export default {
 		chart_one_data: function() {
 			this.basicData.datasets[0].data = this.chart_one_data;
 		},
+		chart_one_bck: function() {
+			this.basicData.datasets[0].backgroundColor = this.chart_one_bck;
+			this.$refs.chartOne.refresh();
+		},
 		chart_two_data: function() {
 			this.basicData2.datasets[0].data = this.chart_two_data;
-		}
+		},
+		chart_two_bck: function() {
+			this.basicData2.datasets[0].backgroundColor = this.chart_two_bck
+			this.$refs.chartTwo.refresh();
+		},
+		chart_three_data: function() {
+			this.basicData.datasets[0].data = this.chart_three_data;
+		},
+		chart_three_bck: function() {
+			this.basicData.datasets[0].backgroundColor = this.chart_three_bck
+			this.$refs.chartOne.refresh();
+		},
+		chart_four_data: function() {
+			this.basicData2.datasets[0].data = this.chart_four_data;
+		},
+		chart_four_bck: function() {
+			this.basicData2.datasets[0].backgroundColor = this.chart_four_bck
+			this.$refs.chartTwo.refresh();
+		},
 	}
 }
 </script>

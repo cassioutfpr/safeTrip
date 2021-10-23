@@ -7,7 +7,10 @@
         </div>
         <Form v-if="!isShowingRoute" @handleSearchRoute='handleSearchRoute' style='margin-top:20px'
           :loading="loading"/>
-        <RouteCharts v-if="isShowingRoute" :chart_one_data='chartOneData' :chart_two_data='chartTwoData' :chart_three_data='chartThreeData' :chart_four_data='chartFourData'
+        <RouteCharts v-if="isShowingRoute" :chart_one_data='chartOneData' 
+        :chart_one_bck='chartOneBck' :chart_two_data='chartTwoData' 
+        :chart_two_bck='chartTwoBck' :chart_three_data='chartThreeData' 
+        :chart_three_bck='chartThreeBck' :chart_four_data='chartFourData' :chart_four_bck='chartFourBck'
         :distance_fastest="fastestDistance" :distance_safest="safestDistance"
         :time_fastest="fastestTime" :time_safest="safestTime"
           @handleBackToForm='handleBackToForm'/>
@@ -26,7 +29,7 @@ import Form from './components/Form.vue'
 import RouteCharts from './components/RouteCharts.vue'
 import 'primeflex/primeflex.css';
 import axios from 'axios'
-
+import moment from 'moment'
 
 export default {
   name: 'App',
@@ -41,12 +44,16 @@ export default {
       destiny: {},
       date: null,
       markers: [],
-      isShowingRoute: true,
+      isShowingRoute: false,
       pathFastest: [],
       chartOneData: [],
+      chartOneBck: [],
       chartTwoData: [],
+      chartTwoBck: [],
       chartThreeData: [],
+      chartThreeBck: [],
       chartFourData: [],
+      chartFourBck: [],
       pathSafest: [],
       loading: false,
       fastestTime: 0,
@@ -81,41 +88,98 @@ export default {
         this.markers = [];
         this.loading = false;
     },
+    initHoursArray() {
+      let array = [];
+      for (let i = 0; i < 24; i++) {
+        array.push('#42A5F5');
+      }
+      return array;
+    },
+    initDaysArray() {
+      let array = [];
+      for (let i = 0; i < 7; i++) {
+        array.push('#42A5F5');
+      }
+      return array;
+    },
+    getHoursColorArray(tripDuration) {
+      let dataI = moment(this.date).hour()
+      let dataF = moment(this.date).add(tripDuration, 'seconds').hour()
+      let array = this.initHoursArray();
+      if (dataF - dataI < 0) {
+        for (let i = 23; i >= dataI; i--) {
+          array[i] = '#FFA726';
+        }
+        for (let i = 0; i <= dataF; i++) {
+          array[i] = '#FFA726';
+        }
+      } else {
+        for (let i = dataF; i >= dataI; i--) {
+          array[i] = '#FFA726';
+        }
+      }
+
+      return array;
+    },
+    getDaysColorArray(tripDuration) {
+      let dataI = moment(this.date).isoWeekday() - 1
+      let dataF = moment(this.date).add(tripDuration, 'seconds').isoWeekday() - 1;
+      let array = this.initDaysArray();
+      if (dataF - dataI < 0) {
+        for (let i = 6; i >= dataI; i--) {
+          array[i] = '#FFA726';
+        }
+      } else {
+        for (let i = dataF; i >= dataI; i--) {
+          array[i] = '#FFA726';
+        }
+      }
+
+      return array;
+    },
     postRoute() {
+      const promises = [];
+
       let postObject = {
         initLat: this.origin.lat,
         initLng: this.origin.lng,
         destLat: this.destiny.lat,
         destLng: this.destiny.lng,
-        destiny: this.destiny,
-        date: this.date.valueOf()
       }
       
       this.loading = true;
-      axios
-        .post('http://localhost:8081/route', postObject)
-          .then(response => {
-            console.log(response);
-            let paths = response.data.split("|");
+
+      promises.push(axios.post('http://15.228.48.50:8080/route-fast', postObject));
+      promises.push(axios.post('http://15.228.48.50:8080/route-safe', postObject));
+
+      Promise.all(promises)
+        .then(async (results) => {
+          if (results.length > 0) {
+            let paths = results[0].data.split("|");
             this.pathFastest = this.processResponse(paths[0])
             this.fastestTime = paths[1]/3600000
             this.fastestDistance = paths[2]/1000
             this.chartOneData = this.getChartData1(paths);
+            this.chartOneBck = this.getHoursColorArray(paths[1]/1000)
             this.chartTwoData = this.getChartData2(paths);
+            this.chartTwoBck = this.getDaysColorArray(paths[1]/1000)
 
-            this.pathSafest = this.processResponse(paths[34])
-            this.safestTime = paths[35]/3600000
-            this.safestDistance = paths[36]/1000
-            this.chartThreeData = this.getChartData3(paths);
-            this.chartFourData = this.getChartData4(paths);
-
-            this.isShowingRoute = true;
-            this.loading = true;
-          })
-          .catch(error => {
-            console.log(error)
-            this.loading = false;
-          })
+            paths = results[1].data.split("|");
+            this.pathSafest = this.processResponse(paths[0])
+            this.safestTime = paths[1]/3600000
+            this.safestDistance = paths[2]/1000
+            this.chartThreeData = this.getChartData1(paths);
+            this.chartThreeBck = this.getHoursColorArray(paths[1]/1000);
+            this.chartFourData = this.getChartData2(paths);
+            this.chartFourBck = this.getDaysColorArray(paths[1]/1000)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        }).finally(() => {
+           this.isShowingRoute = true;
+          this.loading = true;
+        });
       },
       processResponse(response) {
         let pathTemp = [];

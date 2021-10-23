@@ -3,7 +3,7 @@
 
 		<GmapMap
 			:center="center"
-			:zoom="17"
+			:zoom="8"
 			map-type-id="terrain"
 			style="min-height: calc(100vh);"
 			>
@@ -45,7 +45,7 @@ export default {
   },
 	data () {
 		return {
-		center: {lat:-25.4391300, lng: -49.26872199999999},
+		center: {lat:-24.367113562651262, lng: -51.383056640625},
 		// path: [
 		// 	{lat:-25.44514,lng:-49.28661},
 		// 	{lat:-25.43073,lng:-49.32408},

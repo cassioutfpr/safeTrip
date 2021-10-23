@@ -8,9 +8,13 @@ import 'primevue/resources/primevue.min.css';
 import 'primevue/resources/themes/saga-blue/theme.css'
 import 'primeicons/primeicons.css'
 import ToastService from 'primevue/toastservice';
+import moment from 'moment'
+
+Vue.prototype.moment = moment
 
 Vue.use(ToastService);
 Vue.use(PrimeVue);
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyD0lEJcF8r5LqpOQMYrE7FXNRwnTB8sciE',
